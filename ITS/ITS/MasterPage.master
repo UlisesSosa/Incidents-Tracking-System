@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true"  CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true"   CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
 
 
 
@@ -14,12 +14,14 @@
     <title>Gentelella Alela! | </title>
      <asp:ContentPlaceHolder id="head" runat="server">
     </asp:ContentPlaceHolder>
-    <!-- Bootstrap -->
+  <!-- Bootstrap -->
     <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- NProgress -->
     <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+   <link href="../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
     <link href="../build/css/custom.min.css" rel="stylesheet">
@@ -196,7 +198,7 @@
         <!-- /top navigation -->
 
         <!-- page content -->
-       <form id="form1" runat="server">
+       <form id="form" runat="server">
 
         <asp:ContentPlaceHolder id="ContentPlaceHolder1" runat="server">
         </asp:ContentPlaceHolder>
@@ -215,7 +217,7 @@
 
 
 
-     <!-- jQuery -->
+        <!-- jQuery -->
     <script src="../vendors/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
     <script src="../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -223,7 +225,9 @@
     <script src="../vendors/fastclick/lib/fastclick.js"></script>
     <!-- NProgress -->
     <script src="../vendors/nprogress/nprogress.js"></script>
-    
+    <!-- iCheck -->
+    <script src="../vendors/iCheck/icheck.min.js"></script>
+
     <!-- Custom Theme Scripts -->
     <script src="../build/js/custom.min.js"></script>
   </body>

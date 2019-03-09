@@ -66,7 +66,7 @@ public partial class _Default : System.Web.UI.Page
             sqlCon.Open();
         SqlCommand sqlCmd = new SqlCommand("ddlArea", sqlCon);
         ddlArea.DataSource = sqlCmd.ExecuteReader();
-        ddlArea.DataTextField = "NameArea";
+        ddlArea.DataTextField = "Area";
         ddlArea.DataValueField = "IdArea";
         ddlArea.DataBind();
         sqlCon.Close();

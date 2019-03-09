@@ -1,85 +1,95 @@
-﻿<%@ Page Language="C#"  AutoEventWireup="true"  MasterPageFile="MasterPage.master" CodeFile="Incidencias.aspx.cs" Inherits="Default2" %>
-
+﻿<%@ Page Language="C#" AutoEventWireup="true" MasterPageFile="MasterPage.master" EnableEventValidation = "false"  CodeFile="Incidencias.aspx.cs" Inherits="_Default" %>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-
-
-          <div class="right_col" role="main">
+    <!-- page content -->
+        <div class="right_col" role="main">
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>Projects <small>Listing design</small></h3>
+                <h3>Tables <small>Some examples to get you started</small></h3>
               </div>
             </div>
-            
-                        <div class="clearfix"></div>
 
             <div class="row">
-              <div class="col-md-12">
+
+
+
+             
+
+              <div class="clearfix"></div>
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                   <div class="x_title">
-                    <h2>Projects</h2>
+                    <h2>Table design <small>Custom design</small></h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
                       </li>
                     </ul>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="x_content">
+
+                 
+
     <asp:UpdatePanel ID="Up_Incidencias" runat="server">
      <ContentTemplate>
      <asp:ScriptManager ID="ScriptManager2" runat="server">
      </asp:ScriptManager>
-         <Button onserverclick="Descargar" runat="server" class="btn btn-success pull-right"><i class="fa fa-download"></i> Excel</Button>
-
-         <div class="btn btn-success pull-right">
-        <i class="fa fa-download"></i>
-        <asp:Label ID="Label1" runat="server" type="button" Text="Excel" onclick="Descargar();"></asp:Label>
-        </div>
-            <table id="tableddl" runat="server" class="auto-style2">
-        <tr>
+        <div class="x_content">
+        <div class="table-responsive">
+            <br />
+            <Button onserverclick="Descargar" runat="server" class="btn btn-success"><i class="fa fa-download"></i> Excel</Button>
+            <table id="tableddl" runat="server">
+            <tr>
             <td>Area</td>
             <td>Categoria</td>
             <td>Prioridad</td>
             <td>Estado</td>
             <td>Resultado<asp:Label ID="lblDetailsMessage" runat="server" Text="" ForeColor="blue"></asp:Label> </td>
-        </tr>
-        <tr>
-           <td> 
-                  <asp:DropDownList ID="ddlAreagvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
-                    OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
-                    <asp:ListItem Text="ALL" Value="0" />
-                </asp:DropDownList>
-           </td>
-           <td>
-                <asp:DropDownList ID="ddlCategoriagvw" runat="server"  AppendDataBoundItems="true" AutoPostBack="true"
-                    OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
-                    <asp:ListItem Text="ALL" Value="0" />
-                </asp:DropDownList>
-            </td>
-            <td>
-                <asp:DropDownList ID="ddlPrioridadgvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
-                    OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
-                    <asp:ListItem Text="ALL" Value="0" />
-                </asp:DropDownList>
-            </td>
-            <td>
-                <asp:DropDownList ID="ddlEstadogvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
-                    OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
-                    <asp:ListItem Text="ALL" Value="0" />
-                </asp:DropDownList>
-            </td>
-             <td> 
+            </tr>
+            <tr>
+            <td> 
+             <asp:DropDownList ID="ddlAreagvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
+             OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
+             <asp:ListItem Text="ALL" Value="0" />
+             </asp:DropDownList>
+             </td>
+             <td>
+             <asp:DropDownList ID="ddlCategoriagvw" runat="server"  AppendDataBoundItems="true" AutoPostBack="true"
+              OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
+              <asp:ListItem Text="ALL" Value="0" />
+              </asp:DropDownList>
+              </td>
+              <td>
+              <asp:DropDownList ID="ddlPrioridadgvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
+              OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
+              <asp:ListItem Text="ALL" Value="0" />
+              </asp:DropDownList>
+              </td>
+              <td>
+              <asp:DropDownList ID="ddlEstadogvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
+               OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
+               <asp:ListItem Text="ALL" Value="0" />
+               </asp:DropDownList>
+               </td>
+               <td> 
                <asp:Button ID="BtnResultados" class="buttonFinish btn btn-default" runat="server" Text=" 0" />
-            </td>
-        </tr>
-                
-    </table>
+               </td>
+               </tr>      
+               </table>
 
 
-                    <!-- start project list -->
-                   
-
-             <asp:GridView runat="server" ID="gvBugs"  AutoGenerateColumns="False" class="table table-striped projects" AllowPaging="True"  EmptyDataText="No se han encontrado registros para mostrar"  OnPageIndexChanging="PageIndexChanging" BackColor="White" BorderColor="#CCCCCC" BorderStyle="None" BorderWidth="1px" CellPadding="3">
+             <asp:GridView runat="server" ID="gvIncidents"  AutoGenerateColumns="False" class="table table-striped jambo_table bulk_action" AllowPaging="True"  EmptyDataText="No se han encontrado registros para mostrar"  OnPageIndexChanging="PageIndexChanging">
              <Columns>
              <asp:TemplateField HeaderText="Acción">
                     <ItemTemplate>
@@ -105,31 +115,22 @@
                 </asp:TemplateField >
                 <asp:BoundField DataField="CreationDate" HeaderText="Reportado el dia" />
                 <asp:BoundField DataField="ResolucionDate" HeaderText="Resuelto el dia" NullDisplayText="N/A"/>
-
-                
-                
-        </Columns>
-                 <FooterStyle BackColor="#CCCC99" ForeColor="Black" />
-                 <HeaderStyle BackColor="#5D7B9D" Font-Bold="True" ForeColor="White" />
-                 <PagerStyle BackColor="White" ForeColor="Black" HorizontalAlign="Right" />
-                 <SelectedRowStyle BackColor="#CC3333" Font-Bold="True" ForeColor="White" />
-                 <SortedAscendingCellStyle BackColor="#F7F7F7" />
-                 <SortedAscendingHeaderStyle BackColor="#4B4B4B" />
-                 <SortedDescendingCellStyle BackColor="#E5E5E5" />
-                 <SortedDescendingHeaderStyle BackColor="#242121" />
-    </asp:GridView>
-                    <!-- end project list -->
-
+                </Columns>
+                </asp:GridView>
+                    </div>
+							
+						
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        </ContentTemplate>
+       </div>
+       </div>
+     </ContentTemplate>
     </asp:UpdatePanel>
-          </div>
-          </div>
+        <!-- /page content -->
+    </div>
+    </div>
 </asp:Content>
-      
-   

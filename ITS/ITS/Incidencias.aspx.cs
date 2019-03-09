@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Drawing;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Default2 : System.Web.UI.Page
+public partial class _Default : System.Web.UI.Page
 {
-
-
     private string connectionString = WebConfigurationManager.ConnectionStrings["connStr"].ConnectionString;
 
     protected void Page_Load(object sender, EventArgs e)
@@ -64,15 +64,15 @@ public partial class Default2 : System.Web.UI.Page
         }
         SqlDataAdapter sda = new SqlDataAdapter(cmd);
         sda.Fill(dt);
-        gvBugs.DataSource = dt;
-        gvBugs.DataBind();
-        BtnResultados.Text = this.gvBugs.Rows.Count.ToString();
+        gvIncidents.DataSource = dt;
+        gvIncidents.DataBind();
+        BtnResultados.Text = this.gvIncidents.Rows.Count.ToString();
     }
 
 
     protected void PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
-        gvBugs.PageIndex = e.NewPageIndex;
+        gvIncidents.PageIndex = e.NewPageIndex;
         BindGrid("Filtro", CommandType.Text, new List<SqlParameter>().ToArray());
     }
 
@@ -148,12 +148,54 @@ public partial class Default2 : System.Web.UI.Page
     }
 
 
-
-    protected void Descargar(object sender, EventArgs e )
+    public override void VerifyRenderingInServerForm(Control control)
     {
-        ddlAreagvw.SelectedIndex = 0;
-      
+        /* Confirms that an HtmlForm control is rendered for the specified ASP.NET
+           server control at run time. */
     }
+
+    protected void DescargarExcel(object sender, EventArgs e)
+    {
+ 
+        Response.ClearContent();
+        Response.Buffer = true;
+        Response.AddHeader("content-disposition", string.Format("attachment; filename={0}", "Incidencias.xls"));
+        Response.ContentType = "application/vnd.ms-excel";
+        System.IO.StringWriter sw = new System.IO.StringWriter();
+        System.Web.UI.HtmlTextWriter hw = new System.Web.UI.HtmlTextWriter(sw);
+        gvIncidents.AllowPaging = false;
+        gvIncidents.RenderControl(hw);
+        Response.Write(sw.ToString());
+        Response.End();
+
+    }
+
+    protected void DescargarPDF(object sender, EventArgs e)
+    {
+
+        Response.ContentType = "application/pdf";
+        Response.AddHeader("content-disposition", "attachment;filename=Vithal_Wadje.pdf");
+        Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        StringWriter sw = new StringWriter();
+        HtmlTextWriter hw = new HtmlTextWriter(sw);
+        gvIncidents.RenderControl(hw);
+        StringReader sr = new StringReader(sw.ToString());
+        Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
+        HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+        PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+        pdfDoc.Open();
+        htmlparser.Parse(sr);
+        pdfDoc.Close();
+        Response.Write(pdfDoc);
+        Response.End();
+        gvIncidents.AllowPaging = true;
+        gvIncidents.DataBind();
+
+    }
+    
+
+    
+
 
 
 
