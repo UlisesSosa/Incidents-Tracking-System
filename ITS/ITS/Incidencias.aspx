@@ -48,9 +48,18 @@
         <div class="x_content">
         <div class="table-responsive">
             <br />
-            <Button onserverclick="Descargar" runat="server" class="btn btn-success"><i class="fa fa-download"></i> Excel</Button>
+
+            <asp:DropDownList ID="ddlpagesize" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
+             OnSelectedIndexChanged="Pagesize" class="btn btn-default dropdown-toggle">
+            <asp:ListItem Text="10" Value="10" />
+            <asp:ListItem Text="20" Value="20" />
+            <asp:ListItem Text="50" Value="50" />
+            <asp:ListItem Text="100" Value="100" />
+            </asp:DropDownList>
+            <Button onserverclick="DescargarExcel" runat="server" class="btn btn-success"><i class="fa fa-download"></i> Excel</Button>
             <table id="tableddl" runat="server">
             <tr>
+            <td>Filtros</td>
             <td>Area</td>
             <td>Categoria</td>
             <td>Prioridad</td>
@@ -58,66 +67,72 @@
             <td>Resultado<asp:Label ID="lblDetailsMessage" runat="server" Text="" ForeColor="blue"></asp:Label> </td>
             </tr>
             <tr>
+            <td>
+            <asp:LinkButton ID="btnremovef" runat="server" class="btn btn-default" OnClick="Removefiltros">
+            <i class="fa fa-filter"></i>
+            <i class="fa fa-remove"></i>
+            </asp:LinkButton> 
+            </td>
             <td> 
-             <asp:DropDownList ID="ddlAreagvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
-             OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
-             <asp:ListItem Text="ALL" Value="0" />
-             </asp:DropDownList>
-             </td>
-             <td>
-             <asp:DropDownList ID="ddlCategoriagvw" runat="server"  AppendDataBoundItems="true" AutoPostBack="true"
-              OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
-              <asp:ListItem Text="ALL" Value="0" />
-              </asp:DropDownList>
-              </td>
-              <td>
-              <asp:DropDownList ID="ddlPrioridadgvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
-              OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
-              <asp:ListItem Text="ALL" Value="0" />
-              </asp:DropDownList>
-              </td>
-              <td>
-              <asp:DropDownList ID="ddlEstadogvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
-               OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
-               <asp:ListItem Text="ALL" Value="0" />
-               </asp:DropDownList>
-               </td>
-               <td> 
-               <asp:Button ID="BtnResultados" class="buttonFinish btn btn-default" runat="server" Text=" 0" />
-               </td>
-               </tr>      
-               </table>
+            <asp:DropDownList ID="ddlAreagvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
+            OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
+            <asp:ListItem Text="ALL" Value="0" />
+            </asp:DropDownList>
+            </td>
+            <td>
+            <asp:DropDownList ID="ddlCategoriagvw" runat="server"  AppendDataBoundItems="true" AutoPostBack="true"
+            OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
+            <asp:ListItem Text="ALL" Value="0" />
+            </asp:DropDownList>
+            </td>
+            <td>
+            <asp:DropDownList ID="ddlPrioridadgvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
+            OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
+            <asp:ListItem Text="ALL" Value="0" />
+            </asp:DropDownList>
+            </td> 
+            <td>
+            <asp:DropDownList ID="ddlEstadogvw" runat="server" AppendDataBoundItems="true" AutoPostBack="true"
+            OnSelectedIndexChanged="Filtro" class="btn btn-default dropdown-toggle">
+            <asp:ListItem Text="ALL" Value="0" />
+            </asp:DropDownList>
+            </td>
+            <td> 
+            <asp:Button ID="BtnResultados" class="buttonFinish btn btn-default" runat="server" Text=" 0" />
+            </td>
+            </tr>      
+            </table>
 
 
-             <asp:GridView runat="server" ID="gvIncidents"  AutoGenerateColumns="False" class="table table-striped jambo_table bulk_action" AllowPaging="True"  EmptyDataText="No se han encontrado registros para mostrar"  OnPageIndexChanging="PageIndexChanging">
-             <Columns>
-             <asp:TemplateField HeaderText="Acción">
-                    <ItemTemplate>
-                        <asp:LinkButton ID="lnkedit"  class="btn btn-primary btn-xs"  runat="server"  CommandArgument='<%# Eval("ID") %>' OnClick="lnk_Asignar"><i class="fa fa-edit"> Ver </i></asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField >
-                <asp:BoundField DataField="ID" HeaderText="#ID" />
-                <asp:BoundField DataField="Area" HeaderText="Area" />  
-                <asp:BoundField DataField="Creador" HeaderText="Reportado por" />
-                <asp:BoundField DataField="Titulo" HeaderText="Resumen" />
-                <asp:BoundField DataField="Categoria" HeaderText="Categoria" />  
-                <asp:BoundField DataField="Asignadoby" HeaderText="Asignado Por" NullDisplayText="Sin Asignar"/>
-                <asp:BoundField DataField="AsignadoTo" HeaderText="Asignado Para" NullDisplayText="Sin Asignar"/>
-                <asp:TemplateField HeaderText="Prioridad">
-                <ItemTemplate>
-                <asp:Label ID="lblPrioridad" runat="server" class='<%# Eval("Prioridad").ToString() == "Proyecto" ? "btn btn-info btn-xs" : Eval("Prioridad").ToString() == "Medio" ? "btn btn-warning btn-xs" : "btn btn-danger btn-xs"  %>'  Text='<%#Eval("Prioridad") %>' >&nbsp;  </asp:Label>
-                </ItemTemplate>
-                </asp:TemplateField >
-                <asp:TemplateField HeaderText="Estado">
-                <ItemTemplate>
-                <asp:Label ID="lblEstado"   runat="server" class='<%# Eval("Estado").ToString() == "Abierto" ? "btn btn-primary btn-xs" : Eval("Estado").ToString() == "En progreso" ? "btn btn-warning btn-xs" :  Eval("Estado").ToString() == "Resuelto" ? "btn btn-success btn-xs" : "btn btn-dark btn-xs"  %>'  Text='<%#Eval("Estado") %>' >&nbsp;  </asp:Label>
-                </ItemTemplate>
-                </asp:TemplateField >
-                <asp:BoundField DataField="CreationDate" HeaderText="Reportado el dia" />
-                <asp:BoundField DataField="ResolucionDate" HeaderText="Resuelto el dia" NullDisplayText="N/A"/>
-                </Columns>
-                </asp:GridView>
-                    </div>
+           <asp:GridView runat="server" ID="gvIncidents"  AutoGenerateColumns="False" class="table table-striped jambo_table bulk_action" AllowPaging="True"  EmptyDataText="No se han encontrado registros para mostrar"  OnPageIndexChanging="PageIndexChanging">
+           <Columns>
+           <asp:TemplateField HeaderText="Acción">
+                 <ItemTemplate>
+                    <asp:LinkButton ID="lnkedit"  class="btn btn-primary btn-xs"  runat="server"  CommandArgument='<%# Eval("ID") %>' OnClick="lnk_Asignar"><i class="fa fa-edit"> Ver </i></asp:LinkButton>
+                 </ItemTemplate>
+           </asp:TemplateField >
+           <asp:BoundField DataField="ID" HeaderText="#ID" />
+           <asp:BoundField DataField="Area" HeaderText="Area" /> 
+           <asp:BoundField DataField="Creador" HeaderText="Reportado por" />
+           <asp:BoundField DataField="Titulo" HeaderText="Resumen" />
+           <asp:BoundField DataField="Categoria" HeaderText="Categoria" />
+           <asp:BoundField DataField="Asignadoby" HeaderText="Asignado Por" NullDisplayText="Sin Asignar"/>
+           <asp:BoundField DataField="AsignadoTo" HeaderText="Asignado Para" NullDisplayText="Sin Asignar"/>
+           <asp:TemplateField HeaderText="Prioridad">
+           <ItemTemplate>
+           <asp:Label ID="lblPrioridad" runat="server" class='<%# Eval("Prioridad").ToString() == "Proyecto" ? "btn btn-info btn-xs" : Eval("Prioridad").ToString() == "Medio" ? "btn btn-warning btn-xs" : "btn btn-danger btn-xs"  %>'  Text='<%#Eval("Prioridad") %>' >&nbsp;&nbsp;  </asp:Label>
+           </ItemTemplate>
+           </asp:TemplateField >
+           <asp:TemplateField HeaderText="Estado">
+           <ItemTemplate>
+           <asp:Label ID="lblEstado"   runat="server" class='<%# Eval("Estado").ToString() == "Abierto" ? "btn btn-primary btn-xs" : Eval("Estado").ToString() == "En progreso" ? "btn btn-warning btn-xs" :  Eval("Estado").ToString() == "Resuelto" ? "btn btn-success btn-xs" : "btn btn-dark btn-xs"  %>'  Text='<%#Eval("Estado") %>' >&nbsp;&nbsp;  </asp:Label>
+           </ItemTemplate>
+            </asp:TemplateField >
+            <asp:BoundField DataField="CreationDate" HeaderText="Reportado el dia" />
+            <asp:BoundField DataField="ResolucionDate" HeaderText="Resuelto el dia" NullDisplayText="N/A"/>
+            </Columns>
+            </asp:GridView>
+            </div>
 							
 						
                   </div>
@@ -131,6 +146,8 @@
      </ContentTemplate>
     </asp:UpdatePanel>
         <!-- /page content -->
+    </div>
+    </div>
     </div>
     </div>
 </asp:Content>

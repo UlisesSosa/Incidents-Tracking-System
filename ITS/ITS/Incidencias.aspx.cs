@@ -9,6 +9,9 @@ using System.Drawing;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.html.simpleparser;
 
 public partial class _Default : System.Web.UI.Page
 {
@@ -81,8 +84,6 @@ public partial class _Default : System.Web.UI.Page
 
     protected void GvwArea()
     {
-
-
         SqlConnection sqlCon = new SqlConnection(connectionString);
         if (sqlCon.State == ConnectionState.Closed)
             sqlCon.Open();
@@ -92,14 +93,10 @@ public partial class _Default : System.Web.UI.Page
         ddlAreagvw.DataValueField = "IdArea";
         ddlAreagvw.DataBind();
         sqlCon.Close();
-
-
-
     }
+
     protected void GvwCategoria()
     {
-
-
         SqlConnection sqlCon = new SqlConnection(connectionString);
         if (sqlCon.State == ConnectionState.Closed)
             sqlCon.Open();
@@ -109,14 +106,10 @@ public partial class _Default : System.Web.UI.Page
         ddlCategoriagvw.DataValueField = "IdCategoria";
         ddlCategoriagvw.DataBind();
         sqlCon.Close();
-
-
-
     }
+
     private void GvwPrioridad()
     {
-
-
         SqlConnection sqlCon = new SqlConnection(connectionString);
         if (sqlCon.State == ConnectionState.Closed)
             sqlCon.Open();
@@ -126,11 +119,8 @@ public partial class _Default : System.Web.UI.Page
         ddlPrioridadgvw.DataValueField = "IdPrioridad";
         ddlPrioridadgvw.DataBind();
         sqlCon.Close();
-
-
-
-
     }
+
     private void GvwEstado()
     {
 
@@ -147,6 +137,46 @@ public partial class _Default : System.Web.UI.Page
 
     }
 
+    protected void Removefiltros (object sender, EventArgs e)
+    {
+
+        //restablece las listas desplegables
+        ddlAreagvw.SelectedIndex = 0;
+        ddlCategoriagvw.SelectedIndex = 0;
+        ddlPrioridadgvw.SelectedIndex = 0;
+        ddlEstadogvw.SelectedIndex = 0;
+
+        //carga la tabla aplicando los nuevos valores
+        List<SqlParameter> sqlParameter = new List<SqlParameter>();
+        if (ddlAreagvw.SelectedIndex > 0)
+        {
+            sqlParameter.Add(new SqlParameter("@Area", ddlAreagvw.SelectedItem.Value.Trim()));
+        }
+        if (ddlCategoriagvw.SelectedIndex > 0)
+        {
+            sqlParameter.Add(new SqlParameter("@Categoria", ddlCategoriagvw.SelectedItem.Value.Trim()));
+        }
+        if (ddlPrioridadgvw.SelectedIndex > 0)
+        {
+            sqlParameter.Add(new SqlParameter("@Prioridad", ddlPrioridadgvw.SelectedItem.Value.Trim()));
+        }
+        if (ddlEstadogvw.SelectedIndex > 0)
+        {
+            sqlParameter.Add(new SqlParameter("@Estado", ddlEstadogvw.SelectedItem.Value.Trim()));
+        }
+        BindGrid("Filtro", CommandType.StoredProcedure, sqlParameter.ToArray());
+
+
+    }
+
+
+    //define numero de filas a mostrar en la tabla
+    protected void Pagesize(object sender, EventArgs e)
+    {
+        gvIncidents.PageSize = Convert.ToInt32(ddlpagesize.SelectedValue);
+        BindGrid("Filtro", CommandType.Text, new List<SqlParameter>().ToArray());
+    }
+
 
     public override void VerifyRenderingInServerForm(Control control)
     {
@@ -156,48 +186,29 @@ public partial class _Default : System.Web.UI.Page
 
     protected void DescargarExcel(object sender, EventArgs e)
     {
- 
-        Response.ClearContent();
+
         Response.Buffer = true;
         Response.AddHeader("content-disposition", string.Format("attachment; filename={0}", "Incidencias.xls"));
         Response.ContentType = "application/vnd.ms-excel";
         System.IO.StringWriter sw = new System.IO.StringWriter();
         System.Web.UI.HtmlTextWriter hw = new System.Web.UI.HtmlTextWriter(sw);
+        //desabilita la paginacion
         gvIncidents.AllowPaging = false;
+        //Oculta la primera columna de la cuadrícula(índice de base cero)
+        gvIncidents.HeaderRow.Cells[0].Visible = false;
+
+        // Recorre las filas y oculta la celda en la primera columna de boton
+        for (int i = 0; i < gvIncidents.Rows.Count; i++)
+        {
+            GridViewRow row = gvIncidents.Rows[i];
+            row.Cells[0].Visible = false;
+        }
+
         gvIncidents.RenderControl(hw);
         Response.Write(sw.ToString());
         Response.End();
 
     }
-
-    protected void DescargarPDF(object sender, EventArgs e)
-    {
-
-        Response.ContentType = "application/pdf";
-        Response.AddHeader("content-disposition", "attachment;filename=Vithal_Wadje.pdf");
-        Response.Cache.SetCacheability(HttpCacheability.NoCache);
-        StringWriter sw = new StringWriter();
-        HtmlTextWriter hw = new HtmlTextWriter(sw);
-        gvIncidents.RenderControl(hw);
-        StringReader sr = new StringReader(sw.ToString());
-        Document pdfDoc = new Document(PageSize.A4, 10f, 10f, 10f, 0f);
-        HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
-        PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
-        pdfDoc.Open();
-        htmlparser.Parse(sr);
-        pdfDoc.Close();
-        Response.Write(pdfDoc);
-        Response.End();
-        gvIncidents.AllowPaging = true;
-        gvIncidents.DataBind();
-
-    }
-    
-
-    
-
-
-
 
     //Obtiene el id de la fila y redirige a otra pagina.
     protected void lnk_Asignar(object sender, EventArgs e)
